@@ -2,5 +2,5 @@ pandas
 openpyxl
 streamlit
 streamlit-dynamic-filters 
-plotly pandas
+plotly
 nbformat
