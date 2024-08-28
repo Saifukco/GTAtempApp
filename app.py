@@ -14,7 +14,7 @@ def read_data(file):
     return df
 
 def main():
-    st.title("GTA Daash Board")
+    st.title("GTA Dash Board")
     with st.spinner('Loading data...'):
         # Fetch data from MySQL database
         df = read_data('data.xlsx')
