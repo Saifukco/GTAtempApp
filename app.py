@@ -4,6 +4,7 @@ from streamlit_dynamic_filters import DynamicFilters
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import numpy as np
 
 
 
@@ -31,9 +32,23 @@ def main():
     dynamic_filters = DynamicFilters(filtered_df_date, filters=['Type of Outlet','City.1','Owner'])
     dynamic_filters.display_filters(location='sidebar')
     filtered_df = dynamic_filters.filter_df()
+    # Assuming df is your DataFrame with 'LAT' and 'LONG' columns
     filtered_df['LAT'] = filtered_df['LAT'].astype(float)
     filtered_df['LONG'] = filtered_df['LONG'].astype(float)
 
+    # Calculate the center of the map
+    center_lat = np.mean(filtered_df['LAT'])
+    center_lon = np.mean(filtered_df['LONG'])
+
+    # Determine an appropriate zoom level
+    lat_range = filtered_df['LAT'].max() - filtered_df['LAT'].min()
+    lon_range = filtered_df['LONG'].max() - filtered_df['LONG'].min()
+    zoom = 8  # Default zoom level
+
+    if max(lat_range, lon_range) > 0:
+        zoom = max(3, 10 - np.log(max(lat_range, lon_range)))
+
+    # Create the scatter mapbox
     fig = px.scatter_mapbox(
         filtered_df, 
         lat="LAT", 
@@ -42,12 +57,11 @@ def main():
         hover_data=["State", "Owner"],
         color="Type of Outlet",  # Adding color based on the Type of Outlet
         color_discrete_sequence=px.colors.qualitative.Set1,  # Optional: Choose a color sequence
-        zoom=5, 
-        height=600,  # Adjust the height of the map
-        width=3000   # Adjust the width of the map
+        zoom=zoom,  # Set the calculated zoom level
+        center={"lat": center_lat, "lon": center_lon},  # Set the center of the map
+        height=300
     )
-    # Increase the size of the dots
-    fig.update_traces(marker=dict(size=10)) 
+
     fig.update_layout(mapbox_style="open-street-map")
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     col1, col2, = st.columns(2)
