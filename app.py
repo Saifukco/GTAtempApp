@@ -61,7 +61,7 @@ def main():
         center={"lat": center_lat, "lon": center_lon},  # Set the center of the map
         height=300
     )
-
+    fig.update_traces(marker=dict(size=15))  # Adjust the size here
     fig.update_layout(mapbox_style="open-street-map")
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     col1, col2, = st.columns(2)
