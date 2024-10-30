@@ -29,7 +29,7 @@ def main():
         end_date = st.date_input("End Date", df['DATE'].max())
 
     filtered_df_date = df[(df['DATE'] >= start_date) & (df['DATE'] <= end_date)]
-    dynamic_filters = DynamicFilters(filtered_df_date, filters=['Type of Outlet','City.1','Owner'])
+    dynamic_filters = DynamicFilters(filtered_df_date, filters=['Type of Outlet','City','Owner'])
     dynamic_filters.display_filters(location='sidebar')
     filtered_df = dynamic_filters.filter_df()
     # Assuming df is your DataFrame with 'LAT' and 'LONG' columns
